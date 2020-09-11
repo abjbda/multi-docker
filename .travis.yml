@@ -1,0 +1,24 @@
+language: generic 
+
+sudo: required
+services:
+    - docker
+
+before_install:     # - docker build another_project 
+    - docker build -t abjbda/react-test -f ./client/Dockerfile.dev ./client
+
+script:             # - docker run another_project npm run test
+    - docker run -e CI=true abjbda/docker-react npm run test
+    
+after_success:      # build images and push all to docker hub
+    - docker build -t abjbda/multi-client -f ./client
+    - docker build -t abjbda/multi-nginx -f ./nginx
+    - docker build -t abjbda/multi-server -f ./server
+    - docker build -t abjbda/multi-worker -f ./worker
+    # log in to the docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # take those images and push them to docker hub
+    - docker push abjbda/multi-client
+    - docker push abjbda/multi-nginx
+    - docker push abjbda/multi-server
+    - docker push abjbda/multi-worker
