@@ -4,11 +4,15 @@ sudo: required
 services:
     - docker
 
-before_install:     # - docker build another_project 
+before_install:     
     - docker build -t abjbda/react-test -f ./client/Dockerfile.dev ./client
+    # can add more docker images here
+    # - docker build another_project 
 
-script:             # - docker run another_project npm run test
-    - docker run -e CI=true abjbda/docker-react npm run test
+script:             
+    - docker run -e CI=true abjbda/react-test npm run test
+    # can run more docker images here
+    # - docker run another_project npm run test
     
 after_success:      # build images and push all to docker hub
     - docker build -t abjbda/multi-client -f ./client
