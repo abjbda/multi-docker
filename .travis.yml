@@ -26,3 +26,16 @@ after_success:      # build images and push all to docker hub
     - docker push abjbda/multi-nginx
     - docker push abjbda/multi-server
     - docker push abjbda/multi-worker
+
+deploy:
+    edge: true
+    provider: elasticbeanstalk
+    region: us-east-1
+    app: multi-docker
+    env: MultiDocker-env
+    bucket_name: elasticbeanstalk-us-east-1-112274542638
+    bucket_path: docker-multi
+    on:
+        branch: master
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
